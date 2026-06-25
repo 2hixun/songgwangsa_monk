@@ -1,0 +1,1082 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>조계산송광사사고 인물부</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Serif+KR:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#fbf9f3;--surface:#fbf9f3;--surface-lo:#f5f3ed;--surface-hi:#eae8e2;--surface-top:#e4e2dd;
+  --border:#c4c7c7;--border-str:#747878;
+  --text:#1b1c19;--text-m:#444748;--text-f:#747878;
+  --gold:#e9c176;--gold-dk:#5d4201;
+  --inv:#30312d;--inv-t:#f3f1eb;
+  --primary:#000;
+  --c-monk-bg:#fef9ec;  --c-monk-t:#78350f;  --c-monk-b:#d97706;
+  --c-person-bg:#eff6ff; --c-person-t:#1e3a5f; --c-person-b:#3b82f6;
+  --c-temple-bg:#f0fdf4; --c-temple-t:#14532d; --c-temple-b:#16a34a;
+  --c-place-bg:#f5f3ff;  --c-place-t:#4c1d95;  --c-place-b:#7c3aed;
+  --c-book-bg:#fff1f2;   --c-book-t:#881337;   --c-book-b:#e11d48;
+  --c-work-bg:#fff7ed;   --c-work-t:#7c2d12;   --c-work-b:#ea580c;
+  --c-object-bg:#f8fafc; --c-object-t:#1e293b; --c-object-b:#64748b;
+  --c-concept-bg:#f0fdfa;--c-concept-t:#134e4a;--c-concept-b:#0d9488;
+}
+body{font-family:'Noto Serif KR',serif;background:var(--bg);color:var(--text);
+  height:100vh;display:flex;flex-direction:column;overflow:hidden;font-size:15px}
+
+/* ── Header ── */
+header{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:0 36px;height:60px;background:var(--surface);
+  border-bottom:1px solid var(--border);flex-shrink:0;position:relative;z-index:20;
+}
+.brand{font-size:17px;font-weight:700;color:var(--primary);letter-spacing:-.02em}
+.tab-nav{
+  position:absolute;left:50%;transform:translateX(-50%);
+  display:flex;height:100%;gap:32px;
+}
+.tab-btn{
+  height:100%;display:flex;align-items:center;
+  font-size:10px;font-weight:700;letter-spacing:.12em;font-family:'Inter',sans-serif;
+  color:var(--text-m);cursor:pointer;border:none;background:none;
+  border-bottom:2px solid transparent;padding-top:2px;transition:color .15s;
+}
+.tab-btn.active{color:var(--primary);border-bottom-color:var(--primary)}
+.tab-btn:hover:not(.active){color:var(--text)}
+.hdr-actions{display:flex;gap:6px;align-items:center}
+.zoom-btn,.icon-btn{
+  width:32px;height:32px;border-radius:50%;border:none;background:none;
+  cursor:pointer;display:flex;align-items:center;justify-content:center;
+  color:var(--text-m);transition:background .12s;font-size:16px;font-family:inherit;
+}
+.zoom-btn:hover,.icon-btn:hover{background:var(--surface-top)}
+.zoom-sep{width:1px;height:20px;background:var(--border);margin:0 2px}
+
+/* ── Tab containers ── */
+#textTab,#elementTab{flex:1;display:flex;overflow:hidden}
+
+/* ══════════════════ TEXT TAB ══════════════════ */
+.text-layout{display:flex;flex:1;overflow:hidden}
+
+/* Left pane */
+#leftPanel{
+  width:240px;flex-shrink:0;border-right:1px solid var(--border);
+  display:flex;flex-direction:column;background:var(--surface);overflow:hidden;
+}
+.panel-header{
+  padding:10px 14px;border-bottom:1px solid var(--border);flex-shrink:0;
+  display:flex;align-items:center;justify-content:space-between;background:var(--surface-lo);
+}
+.panel-label{font-size:10px;font-weight:700;letter-spacing:.12em;color:var(--text-f);
+  text-transform:uppercase;font-family:'Inter',sans-serif}
+.legend{display:flex;flex-wrap:wrap;gap:4px;padding:8px 10px;
+  border-bottom:1px solid var(--border);flex-shrink:0;background:var(--surface)}
+.legend-badge{
+  font-size:9px;font-weight:700;padding:2px 6px;border-radius:3px;
+  font-family:'Inter',sans-serif;border:1px solid transparent;cursor:default;
+}
+#leftTree{flex:1;overflow-y:auto;padding:6px 0}
+
+.tree-chapter{margin-bottom:2px}
+.tree-ch-hdr{
+  display:flex;align-items:center;gap:6px;padding:8px 14px;cursor:pointer;
+  font-size:13px;font-weight:700;color:var(--text);border-radius:4px;
+  transition:background .12s;user-select:none;
+}
+.tree-ch-hdr:hover{background:var(--surface-hi)}
+.tree-toggle{font-size:9px;color:var(--text-f);width:10px;flex-shrink:0}
+.tree-ch-body{padding-left:12px}
+.tree-ch-body.collapsed{display:none}
+.tree-section{margin-bottom:2px}
+.tree-sec-hdr{
+  display:flex;align-items:center;gap:6px;padding:6px 10px;cursor:pointer;
+  font-size:12px;font-weight:600;color:var(--text-m);border-radius:4px;
+  transition:background .12s;user-select:none;
+}
+.tree-sec-hdr:hover{background:var(--surface-hi)}
+.tree-sec-body{padding-left:10px}
+.tree-sec-body.collapsed{display:none}
+.tree-content{
+  padding:5px 10px 5px 12px;cursor:pointer;font-size:12px;color:var(--text-m);
+  border-left:2px solid transparent;border-radius:0 4px 4px 0;
+  transition:all .12s;margin:2px 0;display:flex;align-items:center;
+  justify-content:space-between;
+}
+.tree-content:hover{background:var(--surface-hi);border-left-color:var(--border)}
+.tree-content.active{background:var(--surface-hi);border-left-color:var(--gold);
+  color:var(--text);font-weight:600}
+.tree-cnt-num{
+  font-size:10px;font-family:'Inter',sans-serif;color:var(--text-f);
+  background:var(--surface-top);padding:1px 5px;border-radius:8px;flex-shrink:0;
+}
+
+/* Center pane */
+#centerPanel{
+  flex:1;display:flex;flex-direction:column;background:#fbf9f3;
+  border-right:1px solid var(--border);overflow:hidden;position:relative;
+}
+.center-toolbar{
+  padding:10px 20px;display:flex;justify-content:space-between;align-items:center;
+  flex-shrink:0;border-bottom:1px solid var(--border);background:var(--surface-lo);
+}
+.crumb{font-size:11px;color:var(--text-f);font-family:'Inter',sans-serif}
+.crumb strong{color:var(--text-m)}
+.zoom-grp{display:flex;gap:4px}
+#centerBody{flex:1;overflow-y:auto;padding:32px 44px 48px}
+.content-wrap{max-width:620px;margin:0 auto}
+#contentTitle{
+  font-size:17px;font-weight:700;color:var(--primary);text-align:center;
+  padding-bottom:14px;border-bottom:1px solid var(--border);margin-bottom:24px;
+}
+.text-para{margin-bottom:18px;line-height:2;text-align:justify;word-break:keep-all}
+.quote-block{
+  border-left:3px solid var(--gold);padding:16px 20px;
+  margin:10px 0 20px;background:var(--surface-lo);border-radius:0 4px 4px 0;
+}
+.quote-src{
+  font-size:10px;color:var(--text-f);font-family:'Inter',sans-serif;
+  letter-spacing:.06em;margin-bottom:12px;text-transform:uppercase;
+}
+.quote-title{font-size:15px;font-weight:700;text-align:center;margin-bottom:12px;color:var(--text)}
+.quote-contrib{font-size:12px;color:var(--text-m);margin-bottom:4px;
+  display:flex;align-items:flex-start;gap:8px}
+.contrib-lbl{
+  font-size:9px;font-weight:700;background:var(--surface-top);
+  padding:2px 5px;border-radius:2px;color:var(--text-f);
+  font-family:'Inter',sans-serif;letter-spacing:.05em;flex-shrink:0;margin-top:2px;
+}
+.reference-block{
+  background:var(--surface-hi);border:1px solid var(--border);
+  border-radius:4px;padding:12px 16px;margin:16px 0;font-size:.88em;
+}
+.ref-hdr{font-size:10px;font-weight:700;color:var(--text-f);
+  letter-spacing:.1em;margin-bottom:8px;font-family:'Inter',sans-serif}
+.poem-block{
+  font-size:.92em;line-height:2.1;color:var(--text-m);
+  border-top:1px dashed var(--border);border-bottom:1px dashed var(--border);
+  padding:12px 4px;margin:12px 0;
+}
+.date-inline{color:var(--text-f);font-size:.88em}
+.annotation-sup{font-size:.75em;color:var(--text-f)}
+.sub-heading{font-size:12px;font-weight:600;color:var(--text-f);margin:8px 0 4px;
+  font-family:'Inter',sans-serif}
+
+/* ── Entity badges ───────────────────────────────
+   Default  : dotted underline, blends with text
+   Hover    : tint text with entity colour
+   Selected : full coloured badge
+─────────────────────────────────────────────── */
+.entity-badge{
+  display:inline;padding:0 1px;border-radius:0;font-size:inherit;
+  cursor:pointer;background:transparent;color:inherit;border:none;
+  line-height:inherit;text-underline-offset:3px;
+  transition:color .15s,background .15s,padding .12s,
+             border-radius .12s,outline .12s;
+}
+
+/* Dotted underlines — scoped to .entity-badge to avoid polluting panel snippets */
+.entity-badge.badge-monk   {text-decoration:underline dotted var(--c-monk-b)}
+.entity-badge.badge-person {text-decoration:underline dotted var(--c-person-b)}
+.entity-badge.badge-temple {text-decoration:underline dotted var(--c-temple-b)}
+.entity-badge.badge-place  {text-decoration:underline dotted var(--c-place-b)}
+.entity-badge.badge-book   {text-decoration:underline dotted var(--c-book-b)}
+.entity-badge.badge-work   {text-decoration:underline dotted var(--c-work-b)}
+.entity-badge.badge-object {text-decoration:underline dotted var(--c-object-b)}
+.entity-badge.badge-concept{text-decoration:underline dotted var(--c-concept-b)}
+
+/* Hover: tint text */
+.entity-badge.badge-monk:not(.selected)   {color:inherit}
+.entity-badge.badge-monk:hover            {color:var(--c-monk-t)}
+.entity-badge.badge-person:hover          {color:var(--c-person-t)}
+.entity-badge.badge-temple:hover          {color:var(--c-temple-t)}
+.entity-badge.badge-place:hover           {color:var(--c-place-t)}
+.entity-badge.badge-book:hover            {color:var(--c-book-t)}
+.entity-badge.badge-work:hover            {color:var(--c-work-t)}
+.entity-badge.badge-object:hover          {color:var(--c-object-t)}
+.entity-badge.badge-concept:hover         {color:var(--c-concept-t)}
+
+/* Selected: full badge */
+.entity-badge.selected{
+  padding:1px 6px;border-radius:3px;
+  text-decoration:none!important;
+}
+.entity-badge.badge-monk.selected   {background:var(--c-monk-bg);  color:var(--c-monk-t);  outline:1.5px solid var(--c-monk-b)}
+.entity-badge.badge-person.selected {background:var(--c-person-bg);color:var(--c-person-t);outline:1.5px solid var(--c-person-b)}
+.entity-badge.badge-temple.selected {background:var(--c-temple-bg);color:var(--c-temple-t);outline:1.5px solid var(--c-temple-b)}
+.entity-badge.badge-place.selected  {background:var(--c-place-bg); color:var(--c-place-t); outline:1.5px solid var(--c-place-b)}
+.entity-badge.badge-book.selected   {background:var(--c-book-bg);  color:var(--c-book-t);  outline:1.5px solid var(--c-book-b)}
+.entity-badge.badge-work.selected   {background:var(--c-work-bg);  color:var(--c-work-t);  outline:1.5px solid var(--c-work-b)}
+.entity-badge.badge-object.selected {background:var(--c-object-bg);color:var(--c-object-t);outline:1.5px solid var(--c-object-b)}
+.entity-badge.badge-concept.selected{background:var(--c-concept-bg);color:var(--c-concept-t);outline:1.5px solid var(--c-concept-b)}
+
+/* Right pane */
+#rightPanel{
+  width:290px;flex-shrink:0;display:flex;flex-direction:column;
+  background:var(--surface);overflow:hidden;
+}
+.right-header{
+  padding:10px 14px;border-bottom:1px solid var(--border);
+  display:flex;align-items:center;justify-content:space-between;
+  background:var(--surface-lo);flex-shrink:0;
+}
+.right-close{
+  background:none;border:none;cursor:pointer;color:var(--text-f);
+  font-size:14px;padding:2px 4px;border-radius:3px;transition:all .12s;
+}
+.right-close:hover{background:var(--surface-top);color:var(--text)}
+#entityPanel,#elEntityPanel{flex:1;overflow-y:auto;padding:16px}
+#entityFooter,#elEntityFooter{
+  padding:10px 12px;border-top:1px solid var(--border);
+  background:var(--surface-lo);flex-shrink:0;
+}
+.open-btn{
+  width:100%;padding:8px;background:var(--inv);color:var(--inv-t);
+  border:none;border-radius:4px;font-size:11px;font-family:'Inter',sans-serif;
+  font-weight:600;cursor:pointer;display:flex;align-items:center;
+  justify-content:center;gap:6px;transition:opacity .12s;
+}
+.open-btn:hover{opacity:.85}
+
+/* Entity detail panel */
+.ep-type-badge{
+  display:inline-flex;align-items:center;gap:4px;
+  padding:3px 10px;border-radius:999px;font-size:10px;
+  font-weight:700;letter-spacing:.06em;font-family:'Inter',sans-serif;
+  margin-bottom:10px;border:1px solid transparent;
+}
+.ep-name{font-size:20px;font-weight:700;color:var(--primary);margin-bottom:2px}
+.ep-hanja{font-size:13px;color:var(--text-m);margin-bottom:2px;font-style:italic}
+.ep-count{font-size:10px;color:var(--text-f);font-family:'Inter',sans-serif;margin-bottom:14px}
+.ep-divider{border:none;border-top:1px solid var(--border);margin:12px 0}
+.attr-section-lbl{
+  font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;
+  color:var(--text-f);font-family:'Inter',sans-serif;margin-bottom:8px;
+}
+.attr-table{width:100%;border-collapse:collapse}
+.attr-table tr{border-bottom:1px solid var(--border)}
+.attr-table tr:last-child{border-bottom:none}
+.attr-key{padding:7px 0;font-size:11px;color:var(--text-f);
+  font-family:'Inter',sans-serif;width:42%;vertical-align:top}
+.attr-val{padding:7px 0 7px 8px;font-size:13px;color:var(--text);
+  vertical-align:top;line-height:1.5}
+.ep-placeholder{
+  display:flex;flex-direction:column;align-items:center;
+  justify-content:center;padding:40px 16px;gap:12px;height:100%;
+}
+.ep-ph-icon{font-size:28px;color:var(--text-f)}
+.ep-ph-text{font-size:12px;color:var(--text-f);text-align:center;line-height:1.7}
+
+/* ═══════════════════ ELEMENT TAB ═══════════════════ */
+.element-layout{display:flex;flex:1;overflow:hidden}
+
+/* Element center grid */
+#elCenter{
+  flex:1;overflow-y:auto;padding:28px 36px;
+  background:#fff;border-right:1px solid var(--border);
+}
+.el-toolbar{
+  padding:10px 20px;display:flex;align-items:center;justify-content:space-between;
+  border-bottom:1px solid var(--border);background:var(--surface-lo);flex-shrink:0;
+}
+.el-search-wrap{position:relative}
+.el-search{
+  padding:6px 12px 6px 30px;background:var(--surface-hi);border:none;
+  border-radius:999px;font-size:12px;color:var(--text);outline:none;
+  width:200px;font-family:inherit;transition:background .12s;
+}
+.el-search:focus{background:var(--surface-top)}
+.el-search-icon{position:absolute;left:9px;top:50%;transform:translateY(-50%);
+  color:var(--text-f);font-size:14px;pointer-events:none}
+.el-filter-row{display:flex;gap:6px;flex-wrap:wrap}
+.el-filter-btn{
+  padding:4px 10px;border-radius:999px;border:1px solid var(--border);
+  font-size:11px;font-family:'Inter',sans-serif;font-weight:600;
+  cursor:pointer;background:none;color:var(--text-m);transition:all .12s;
+}
+.el-filter-btn:hover{background:var(--surface-hi)}
+.el-filter-btn.active{background:var(--inv);color:var(--inv-t);border-color:var(--inv)}
+
+.el-cat-section{margin-bottom:36px}
+.el-cat-header{
+  display:flex;align-items:baseline;gap:8px;
+  border-bottom:1px solid var(--surface-top);padding-bottom:8px;margin-bottom:14px;
+}
+.el-cat-name{font-size:16px;font-weight:600;color:var(--text)}
+.el-cat-count{
+  display:inline-flex;align-items:center;justify-content:center;
+  padding:1px 8px;border-radius:999px;background:var(--surface-top);
+  font-size:10px;color:var(--text-m);font-family:'Inter',sans-serif;
+}
+.el-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:8px}
+.el-card{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:11px 14px;border-radius:10px;border:1px solid var(--border);
+  background:#fff;cursor:pointer;transition:all .15s;text-align:left;
+  font-family:'Noto Serif KR',serif;
+}
+.el-card:hover{border-color:var(--gold-dk);background:var(--surface-lo);transform:translateY(-1px)}
+.el-card.active{border:2px solid var(--gold-dk);background:#fff;
+  box-shadow:0 2px 8px rgba(93,66,1,.12)}
+.el-card-name{font-size:13px;color:var(--text-m);font-weight:400;line-height:1.3}
+.el-card.active .el-card-name{color:var(--primary);font-weight:700}
+.el-card-cnt{
+  font-size:10px;color:var(--text-f);
+  background:rgba(233,193,118,.15);padding:2px 6px;
+  border-radius:999px;font-family:'Inter',sans-serif;flex-shrink:0;margin-left:6px;
+}
+.el-card.active .el-card-cnt{color:var(--gold-dk);background:rgba(233,193,118,.3)}
+.el-empty{font-size:12px;color:var(--text-f);padding:16px 0}
+
+/* Element right pane */
+#elRightPanel{
+  width:360px;flex-shrink:0;display:flex;flex-direction:column;
+  background:var(--surface);overflow:hidden;
+}
+.el-right-header{
+  padding:14px 18px;border-bottom:1px solid var(--border);
+  background:var(--surface-lo);flex-shrink:0;
+}
+.el-right-meta{
+  font-size:10px;font-weight:700;letter-spacing:.1em;color:var(--text-f);
+  text-transform:uppercase;margin-bottom:6px;font-family:'Inter',sans-serif;
+}
+.el-right-title-row{display:flex;align-items:center;justify-content:space-between;gap:8px}
+.el-right-name{font-size:20px;font-weight:700;color:var(--primary)}
+.el-right-badge{
+  padding:3px 10px;border-radius:999px;font-size:10px;
+  font-weight:700;font-family:'Inter',sans-serif;border:1px solid transparent;
+}
+.el-right-sub{font-size:12px;color:var(--text-m);margin-top:3px;font-style:italic}
+.el-right-appears{font-size:11px;color:var(--text-f);margin-top:6px;font-family:'Inter',sans-serif}
+
+#elEntityPanel{padding:0}
+.para-list{flex:1;overflow-y:auto;padding:14px 18px;display:flex;flex-direction:column;gap:14px}
+.para-item{
+  border-left:2px solid transparent;padding-left:12px;
+  cursor:pointer;transition:border-color .15s;
+}
+.para-item:hover{border-left-color:var(--gold-dk)}
+.para-item.active-para{border-left-color:var(--gold-dk)}
+.para-ref-row{display:flex;align-items:center;gap:6px;margin-bottom:5px}
+.para-ref-icon{font-size:12px;color:var(--text-f)}
+.para-ref-label{font-size:10px;color:var(--text-m);font-family:'Inter',sans-serif}
+.para-ref-sec{font-size:10px;color:var(--text-f);font-family:'Inter',sans-serif}
+.para-text{font-size:12px;color:var(--text);line-height:1.7}
+/* Panel snippet highlights — always show as coloured badge (independent of entity-badge reset) */
+.para-highlight{
+  font-weight:700;padding:1px 4px;border-radius:3px;
+  text-decoration:none!important;
+}
+.para-highlight.badge-monk   {background:var(--c-monk-bg);  color:var(--c-monk-t)}
+.para-highlight.badge-person {background:var(--c-person-bg);color:var(--c-person-t)}
+.para-highlight.badge-temple {background:var(--c-temple-bg);color:var(--c-temple-t)}
+.para-highlight.badge-place  {background:var(--c-place-bg); color:var(--c-place-t)}
+.para-highlight.badge-book   {background:var(--c-book-bg);  color:var(--c-book-t)}
+.para-highlight.badge-work   {background:var(--c-work-bg);  color:var(--c-work-t)}
+.para-highlight.badge-object {background:var(--c-object-bg);color:var(--c-object-t)}
+.para-highlight.badge-concept{background:var(--c-concept-bg);color:var(--c-concept-t)}
+.el-right-placeholder{
+  display:flex;flex-direction:column;align-items:center;
+  justify-content:center;padding:48px 20px;gap:12px;
+}
+.el-right-ph-icon{font-size:28px;color:var(--text-f)}
+.el-right-ph-text{font-size:12px;color:var(--text-f);text-align:center;line-height:1.7}
+
+/* attr section within element right panel */
+.el-attr-block{padding:0 18px 16px}
+
+/* Scrollbar */
+::-webkit-scrollbar{width:5px;height:5px}
+::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-thumb{background:var(--surface-top);border-radius:4px}
+::-webkit-scrollbar-thumb:hover{background:var(--border)}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="brand">조계산송광사사고 인물부</div>
+  <div class="tab-nav">
+    <button class="tab-btn active" id="btn-text" onclick="switchTab('text')">Text</button>
+    <button class="tab-btn" id="btn-element" onclick="switchTab('element')">Element</button>
+  </div>
+  <div class="hdr-actions">
+    <button class="zoom-btn" onclick="changeZoom(1)" title="글자 크게">＋</button>
+    <button class="zoom-btn" onclick="changeZoom(-1)" title="글자 작게">－</button>
+    <div class="zoom-sep"></div>
+    <button class="icon-btn" title="설정">⚙</button>
+  </div>
+</header>
+
+<!-- ══════════ TEXT TAB ══════════ -->
+<div id="textTab">
+  <div class="text-layout">
+    <aside id="leftPanel">
+      <div class="panel-header">
+        <span class="panel-label">Contents</span>
+      </div>
+      <div class="legend" id="legend"></div>
+      <div id="leftTree"></div>
+    </aside>
+
+    <section id="centerPanel">
+      <div class="center-toolbar">
+        <div class="crumb" id="crumb">문서를 선택하세요</div>
+        <div class="zoom-grp">
+          <button class="zoom-btn" onclick="changeZoom(1)">＋</button>
+          <button class="zoom-btn" onclick="changeZoom(-1)">－</button>
+        </div>
+      </div>
+      <div id="centerBody">
+        <div class="content-wrap">
+          <h2 id="contentTitle"></h2>
+          <div id="contentBody" onclick="handleBadgeClick(event)"></div>
+        </div>
+      </div>
+    </section>
+
+    <aside id="rightPanel">
+      <div class="right-header">
+        <span class="panel-label">Entity Details</span>
+        <button class="right-close" onclick="clearEntityPanel()">✕</button>
+      </div>
+      <div id="entityPanel">
+        <div class="ep-placeholder">
+          <div class="ep-ph-icon">☞</div>
+          <div class="ep-ph-text">본문에서 색상 표시된 항목을 클릭하면<br>상세 정보가 표시됩니다.</div>
+        </div>
+      </div>
+      <div id="entityFooter" style="display:none">
+        <button class="open-btn" onclick="jumpToElement()">↗ Element 탭에서 보기</button>
+      </div>
+    </aside>
+  </div>
+</div>
+
+<!-- ══════════ ELEMENT TAB ══════════ -->
+<div id="elementTab" style="display:none">
+  <div class="element-layout">
+
+    <!-- Center: entity grid -->
+    <div style="flex:1;display:flex;flex-direction:column;overflow:hidden;border-right:1px solid var(--border)">
+      <div class="el-toolbar">
+        <div class="el-search-wrap">
+          <span class="el-search-icon">🔍</span>
+          <input class="el-search" id="elSearch" placeholder="엔티티 검색…" oninput="filterEntities(this.value)">
+        </div>
+        <div class="el-filter-row" id="elFilterRow"></div>
+      </div>
+      <div id="elCenter"></div>
+    </div>
+
+    <!-- Right: context panel -->
+    <aside id="elRightPanel">
+      <div class="el-right-header">
+        <div class="el-right-meta">Selected Entity</div>
+        <div class="el-right-title-row">
+          <div class="el-right-name" id="elRightName">—</div>
+          <div class="el-right-badge" id="elRightBadge" style="display:none"></div>
+        </div>
+        <div class="el-right-sub" id="elRightSub"></div>
+        <div class="el-right-appears" id="elRightAppears"></div>
+      </div>
+      <div id="elEntityPanel">
+        <div class="el-right-placeholder">
+          <div class="el-right-ph-icon">📋</div>
+          <div class="el-right-ph-text">좌측 격자에서 항목을 선택하면<br>원문 참조 단락이 표시됩니다.</div>
+        </div>
+      </div>
+    </aside>
+  </div>
+</div>
+
+
+
+<script>
+/* ═══════════════════════════════════
+   CONFIG
+═══════════════════════════════════ */
+const ENTITY_TYPES = ['Monk','Person','Temple','Place','Book','Work','Object','Concept'];
+const STRUCTURAL_PARENTS = new Set(['Chapter','Section','Content','Part','Volume','Book']);
+
+const ENTITY_META = {
+  Monk:    { ko:'승려', hanja:'僧', cls:'monk',
+    attrs:[['korname','한국명'],['hanjaname','한자명'],['beopmyeong','법명(法名)'],['beopho','법호(法號)'],['othername','이칭(異稱)'],['birth','생(生)'],['death','몰(沒)']] },
+  Person:  { ko:'인물', hanja:'人', cls:'person',
+    attrs:[['korname','한국명'],['hanjaname','한자명'],['ja','자(字)'],['ho','호(號)'],['othername','이칭(異稱)'],['birth','생(生)'],['death','몰(沒)']] },
+  Temple:  { ko:'사찰', hanja:'寺', cls:'temple',
+    attrs:[['korname','한국명'],['hanjaname','한자명'],['previousname','구명(舊名)'],['type','유형'],['region','지역']] },
+  Place:   { ko:'장소', hanja:'地', cls:'place',
+    attrs:[['korname','한국명'],['hanjaname','한자명'],['previousname','구명(舊名)'],['province','도(道)']] },
+  Book:    { ko:'문헌', hanja:'書', cls:'book',
+    attrs:[['korname','한국명'],['hanjaname','한자명'],['type','유형'],['writer','저자(著者)'],['editer','편자(編者)']] },
+  Work:    { ko:'작품', hanja:'作', cls:'work',
+    attrs:[['korname','한국명'],['hanjaname','한자명'],['type','유형'],...[['writer','저자']]] },
+  Object:  { ko:'유물', hanja:'物', cls:'object',
+    attrs:[['korname','한국명'],['hanjaname','한자명'],['type','유형']] },
+  Concept: { ko:'개념', hanja:'念', cls:'concept', attrs:[] },
+};
+
+/* ═══════════════════════════════════
+   STATE
+═══════════════════════════════════ */
+let xmlDoc = null;
+let registry  = {};    // key → { type, attrs, textSamples, mentions:[{contentId,snippet,secName,chName}] }
+let currentContentId  = null;
+let selectedKey       = null;
+let selectedElKey     = null;
+let elFilterType      = 'ALL';
+let fontSize          = 16;
+let activeTab         = 'text';
+
+/* ═══════════════════════════════════
+   INIT
+═══════════════════════════════════ */
+async function init() {
+  const loading = `<div style="padding:60px 40px;text-align:center;color:var(--text-f)">
+    <div style="font-size:13px;letter-spacing:.06em">데이터 로딩 중…</div></div>`;
+  document.getElementById('centerBody').innerHTML = loading;
+  try {
+    const res = await fetch('data.xml');
+    if (!res.ok) throw new Error('파일 로드 실패 (' + res.status + ')');
+    const xmlText = await res.text();
+    const parser  = new DOMParser();
+    xmlDoc = parser.parseFromString(xmlText, 'application/xml');
+    const parseErr = xmlDoc.querySelector('parsererror');
+    if (parseErr) throw new Error('XML 구문 오류: ' + parseErr.textContent.slice(0,80));
+    document.getElementById('centerBody').innerHTML =
+      '<div class="content-wrap"><h2 id="contentTitle"></h2><div id="contentBody" onclick="handleBadgeClick(event)"></div></div>';
+    buildRegistry();
+    buildLegend();
+    buildLeftPanel();
+    buildElFilters();
+    buildElGrid();
+    const first = xmlDoc.querySelector('Content');
+    if (first) selectContent(first.getAttribute('id'));
+  } catch(e) {
+    document.getElementById('centerBody').innerHTML = `
+      <div style="padding:60px 40px;text-align:center;color:var(--text-f);font-family:'Inter',sans-serif">
+        <div style="font-size:28px;margin-bottom:16px">⚠</div>
+        <div style="font-size:14px;color:var(--text);font-weight:600;margin-bottom:10px">
+          데이터를 불러올 수 없습니다</div>
+        <div style="font-size:12px;line-height:1.8;color:var(--text-m)">
+          ${e.message}<br><br>
+          <strong>data.xml</strong> 파일이 <strong>index.html</strong>과<br>
+          같은 폴더(디렉터리)에 있는지 확인하세요.<br><br>
+          로컬 파일을 직접 열었다면 웹 서버 환경이 필요합니다.<br>
+          GitHub Pages에 배포하면 정상적으로 작동합니다.
+        </div>
+      </div>`;
+  }
+}
+
+/* ── TAB SWITCH ── */
+function switchTab(tab) {
+  activeTab = tab;
+  document.getElementById('btn-text').classList.toggle('active', tab === 'text');
+  document.getElementById('btn-element').classList.toggle('active', tab === 'element');
+  document.getElementById('textTab').style.display    = tab === 'text'    ? 'flex' : 'none';
+  document.getElementById('elementTab').style.display = tab === 'element' ? 'flex' : 'none';
+}
+
+/* ═══════════════════════════════════
+   ENTITY REGISTRY
+═══════════════════════════════════ */
+function buildRegistry() {
+  xmlDoc.querySelectorAll('Content').forEach(content => {
+    const cId     = content.getAttribute('id') || '';
+    const secEl   = content.closest('Section');
+    const chEl    = content.closest('Chapter');
+    const secName = secEl ? getH(secEl) : '';
+    const chName  = chEl  ? getH(chEl)  : '';
+    const cName   = getH(content);
+
+    ENTITY_TYPES.forEach(type => {
+      content.querySelectorAll(type).forEach(el => {
+        const id = el.getAttribute('id') || '';
+        if (!id) return;
+
+        if (!registry[id]) {
+          registry[id] = { type, attrs:{}, textSamples:[], mentions:[] };
+        }
+
+        // Merge attrs
+        for (const attr of el.attributes) {
+          if (attr.value && !registry[id].attrs[attr.name]) {
+            registry[id].attrs[attr.name] = attr.value;
+          }
+        }
+
+        // Track short text samples
+        const txt = el.textContent.trim();
+        if (txt && txt.length < 25 && !registry[id].textSamples.includes(txt)) {
+          registry[id].textSamples.push(txt);
+        }
+
+        // Build mention: find surrounding text snippet from parent <p>
+        if (!hasEntityChildren(el)) {
+          const pEl = el.closest('p');
+          const snippet = pEl ? buildSnippet(pEl, id, type) : '';
+          registry[id].mentions.push({ contentId:cId, cName, secName, chName, snippet });
+        }
+      });
+    });
+  });
+}
+
+function buildSnippet(pEl, entityId, entityType) {
+  // Serialize the p element to a short HTML snippet with the entity highlighted
+  let html = '';
+  for (const child of pEl.childNodes) {
+    if (child.nodeType === 3) {
+      const t = child.textContent;
+      html += escH(t.length > 40 ? t.slice(0,40) + '…' : t);
+    } else if (child.nodeType === 1) {
+      const tag = child.nodeName;
+      if (ENTITY_TYPES.includes(tag) && child.getAttribute('id') === entityId && !hasEntityChildren(child)) {
+        const meta = ENTITY_META[tag] || ENTITY_META.Monk;
+        html += `<span class="para-highlight badge-${meta.cls}">${escH(child.textContent.trim())}</span>`;
+      } else if (ENTITY_TYPES.includes(tag) && !hasEntityChildren(child)) {
+        html += escH(child.textContent.trim());
+      } else {
+        // Recurse lightly
+        let inner = '';
+        for (const c of child.childNodes) {
+          if (c.nodeType === 3) inner += escH(c.textContent);
+        }
+        html += inner;
+      }
+    }
+  }
+  // Trim to ~150 chars display
+  const stripped = html.replace(/<[^>]+>/g, '');
+  if (stripped.length > 120) {
+    // Keep first 120 chars of text but preserve HTML
+    let count = 0; let out = ''; let inTag = false;
+    for (const ch of html) {
+      if (ch === '<') inTag = true;
+      if (!inTag) count++;
+      out += ch;
+      if (ch === '>') inTag = false;
+      if (count > 120) { out += '…'; break; }
+    }
+    return out;
+  }
+  return html;
+}
+
+function getDisplayName(key) {
+  const e = registry[key];
+  if (!e) return key;
+  const a = e.attrs;
+  return a.korname || a.hanjaname || a.beopmyeong || a.beopho || e.textSamples[0] || key;
+}
+
+function hasEntityChildren(node) {
+  return Array.from(node.childNodes).some(
+    c => c.nodeType === 1 && ENTITY_TYPES.includes(c.nodeName)
+  );
+}
+
+/* ── Legend ── */
+function buildLegend() {
+  document.getElementById('legend').innerHTML =
+    Object.entries(ENTITY_META).map(([t, m]) =>
+      `<span class="legend-badge badge-${m.cls}">${m.hanja} ${m.ko}</span>`
+    ).join('');
+}
+
+/* ── Left panel (Text tab) ── */
+function getH(el) {
+  const h = el.querySelector(':scope > h');
+  return h ? h.textContent : (el.getAttribute('name') || el.getAttribute('id') || '');
+}
+
+function countMentions(contentEl) {
+  let n = 0;
+  ENTITY_TYPES.forEach(t => {
+    contentEl.querySelectorAll(t).forEach(el => { if (!hasEntityChildren(el)) n++; });
+  });
+  return n;
+}
+
+function buildLeftPanel() {
+  const container = document.getElementById('leftTree');
+  container.innerHTML = '';
+  xmlDoc.querySelectorAll('Chapter').forEach(chapter => {
+    const chId = chapter.getAttribute('id') || '';
+    const chDiv = document.createElement('div');
+    chDiv.className = 'tree-chapter';
+    const chHdr = document.createElement('div');
+    chHdr.className = 'tree-ch-hdr';
+    chHdr.innerHTML = `<span class="tree-toggle" id="tgl-ch-${chId}">▾</span><span>${getH(chapter)}</span>`;
+    chHdr.addEventListener('click', () => toggleTree('ch', chId));
+    const chBody = document.createElement('div');
+    chBody.className = 'tree-ch-body';
+    chBody.id = `ch-body-${chId}`;
+    chapter.querySelectorAll(':scope > Section').forEach(section => {
+      const secId = section.getAttribute('id') || '';
+      const secDiv = document.createElement('div');
+      secDiv.className = 'tree-section';
+      const secHdr = document.createElement('div');
+      secHdr.className = 'tree-sec-hdr';
+      secHdr.innerHTML = `<span class="tree-toggle" id="tgl-sec-${secId}">▾</span><span>${getH(section)}</span>`;
+      secHdr.addEventListener('click', () => toggleTree('sec', secId));
+      const secBody = document.createElement('div');
+      secBody.className = 'tree-sec-body';
+      secBody.id = `sec-body-${secId}`;
+      section.querySelectorAll(':scope > Content').forEach(content => {
+        const cId = content.getAttribute('id') || '';
+        const cnt = countMentions(content);
+        const cDiv = document.createElement('div');
+        cDiv.className = 'tree-content';
+        cDiv.id = `tree-${cId}`;
+        cDiv.innerHTML = `<span>${getH(content)}</span><span class="tree-cnt-num">${cnt}</span>`;
+        cDiv.addEventListener('click', () => selectContent(cId));
+        secBody.appendChild(cDiv);
+      });
+      secDiv.appendChild(secHdr); secDiv.appendChild(secBody); chBody.appendChild(secDiv);
+    });
+    chDiv.appendChild(chHdr); chDiv.appendChild(chBody); container.appendChild(chDiv);
+  });
+}
+
+function toggleTree(level, id) {
+  const body = document.getElementById(`${level}-body-${id}`);
+  const tgl  = document.getElementById(`tgl-${level}-${id}`);
+  if (!body) return;
+  const c = body.classList.toggle('collapsed');
+  tgl.textContent = c ? '▸' : '▾';
+}
+
+/* ═══════════════════════════════════
+   TEXT CONTENT RENDERING
+═══════════════════════════════════ */
+function selectContent(cId) {
+  currentContentId = cId;
+  selectedKey = null;
+
+  document.querySelectorAll('.tree-content').forEach(el => el.classList.remove('active'));
+  const tEl = document.getElementById(`tree-${cId}`);
+  if (tEl) { tEl.classList.add('active'); tEl.scrollIntoView({block:'nearest'}); }
+
+  const contentEl = xmlDoc.querySelector(`Content[id="${cId}"]`);
+  if (!contentEl) return;
+
+  const secEl  = contentEl.closest('Section');
+  const chEl   = contentEl.closest('Chapter');
+  document.getElementById('crumb').innerHTML =
+    `<strong>${chEl ? getH(chEl) : ''}</strong> › ${secEl ? getH(secEl) : ''} › ${getH(contentEl)}`;
+  document.getElementById('contentTitle').textContent = getH(contentEl);
+
+  const body = document.getElementById('contentBody');
+  body.innerHTML = '';
+  body.style.fontSize = fontSize + 'px';
+
+  for (const child of contentEl.childNodes) {
+    if (child.nodeType === 3) continue;
+    if (child.nodeName === 'h') continue;
+    body.insertAdjacentHTML('beforeend', serializeXML(child, 'Content'));
+  }
+
+  clearEntityPanel();
+}
+
+/* ── XML → HTML ── */
+function escH(s) {
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+function serializeXML(node, parentName) {
+  if (node.nodeType === 3) return escH(node.textContent);
+  if (node.nodeType !== 1) return '';
+  const tag = node.nodeName;
+
+  if (ENTITY_TYPES.includes(tag)) {
+    const id  = node.getAttribute('id') || '';
+    const txt = node.textContent.trim();
+    if (!txt) return '';
+    const meta = ENTITY_META[tag] || ENTITY_META.Monk;
+    if (hasEntityChildren(node)) {
+      let inner = ''; for (const c of node.childNodes) inner += serializeXML(c, tag);
+      return id ? `<span class="entity-wrapper" data-key="${escH(id)}" data-type="${tag}">${inner}</span>` : inner;
+    } else {
+      const ka = id ? `data-key="${escH(id)}"` : '';
+      return `<span class="entity-badge badge-${meta.cls}" ${ka} data-type="${tag}">${escH(txt)}</span>`;
+    }
+  }
+
+  let inner = ''; for (const c of node.childNodes) inner += serializeXML(c, tag);
+
+  switch (tag) {
+    case 'p': return `<p class="text-para">${inner}</p>`;
+    case 'h':
+      if (STRUCTURAL_PARENTS.has(parentName)) return '';
+      return `<div class="sub-heading">${inner}</div>`;
+    case 'Quote': {
+      const src = (node.getAttribute('source_work')||node.getAttribute('source_book')||'').replace(/_/g,' ');
+      return `<div class="quote-block">${src?`<div class="quote-src">출전: ${escH(src)}</div>`:''  }${inner}</div>`;
+    }
+    case 'Reference': return `<div class="reference-block"><div class="ref-hdr">參考</div>${inner}</div>`;
+    case 'Title':           return `<div class="quote-title">${inner}</div>`;
+    case 'Writer':          return `<div class="quote-contrib"><span class="contrib-lbl">撰</span>${inner}</div>`;
+    case 'Calligrapher':    return `<div class="quote-contrib"><span class="contrib-lbl">書</span>${inner}</div>`;
+    case 'TitleCalligrapher': return `<div class="quote-contrib"><span class="contrib-lbl">篆</span>${inner}</div>`;
+    case 'Poem':            return `<div class="poem-block">${inner}</div>`;
+    case 'date': {
+      const w = node.getAttribute('when')||'';
+      return `<span class="date-inline"${w?` title="${escH(w)}"`:''  }>${inner}</span>`;
+    }
+    case 'Annotation': return `<sup class="annotation-sup">[${inner}]</sup>`;
+    default: return inner;
+  }
+}
+
+/* ── Entity click (Text tab) ── */
+function handleBadgeClick(e) {
+  const badge = e.target.closest('.entity-badge');
+  if (!badge) return;
+  selectEntity(badge.dataset.key, badge.dataset.type, badge.textContent.trim());
+}
+
+function selectEntity(key, type, fallback) {
+  selectedKey = key;
+  document.querySelectorAll('.entity-badge').forEach(el =>
+    el.classList.toggle('selected', key && el.dataset.key === key)
+  );
+  showEntityDetails(key, type, fallback);
+}
+
+function showEntityDetails(key, type, fallback) {
+  const entry = key ? registry[key] : null;
+  const rType = (entry && entry.type) || type || 'Monk';
+  const meta  = ENTITY_META[rType] || ENTITY_META.Monk;
+  const attrs = entry ? entry.attrs : {};
+  const name  = attrs.korname || attrs.hanjaname || attrs.beopmyeong ||
+                attrs.beopho || (entry && entry.textSamples[0]) || fallback || key || '—';
+  const hanja = attrs.hanjaname && attrs.hanjaname !== name ? attrs.hanjaname : '';
+  const count = key
+    ? document.querySelectorAll(`.entity-badge[data-key="${CSS.escape(key)}"]`).length : 0;
+
+  let rows = '';
+  meta.attrs.forEach(([ak, al]) => {
+    const v = attrs[ak]; if (!v || !v.trim()) return;
+    const d = ak === 'othername' ? v.split(';').join(' · ') : v;
+    rows += `<tr><td class="attr-key">${al}</td><td class="attr-val">${escH(d)}</td></tr>`;
+  });
+
+  document.getElementById('entityPanel').innerHTML = `
+    <div class="ep-type-badge badge-${meta.cls}">${meta.hanja} ${meta.ko}</div>
+    <div class="ep-name">${escH(name)}</div>
+    ${hanja ? `<div class="ep-hanja">${escH(hanja)}</div>` : ''}
+    ${count > 0 ? `<div class="ep-count">본문 내 ${count}회 등장</div>` : '<div class="ep-count"></div>'}
+    <hr class="ep-divider">
+    <div class="attr-section-lbl">속성 정보</div>
+    ${rows ? `<table class="attr-table">${rows}</table>` : '<div style="font-size:12px;color:var(--text-f);padding:8px 0">속성 정보 없음</div>'}
+  `;
+  document.getElementById('entityFooter').style.display = 'block';
+}
+
+function clearEntityPanel() {
+  selectedKey = null;
+  document.querySelectorAll('.entity-badge').forEach(el => el.classList.remove('selected'));
+  document.getElementById('entityPanel').innerHTML = `
+    <div class="ep-placeholder">
+      <div class="ep-ph-icon">☞</div>
+      <div class="ep-ph-text">본문에서 색상 표시된 항목을 클릭하면<br>상세 정보가 표시됩니다.</div>
+    </div>`;
+  document.getElementById('entityFooter').style.display = 'none';
+}
+
+/* Jump from Text tab entity detail → Element tab */
+function jumpToElement() {
+  if (!selectedKey) return;
+  switchTab('element');
+  elFilterType = 'ALL';
+  updateElFilters();
+  buildElGrid();
+  setTimeout(() => selectElEntity(selectedKey), 60);
+}
+
+function changeZoom(dir) {
+  fontSize = Math.max(12, Math.min(26, fontSize + dir * 2));
+  const b = document.getElementById('contentBody');
+  if (b) b.style.fontSize = fontSize + 'px';
+}
+
+/* ═══════════════════════════════════
+   ELEMENT TAB
+═══════════════════════════════════ */
+
+/* ── Build entity list grouped by type ── */
+function getElEntities() {
+  // Collect unique entities from registry, grouped by type
+  const groups = {};
+  ENTITY_TYPES.forEach(t => groups[t] = []);
+  Object.entries(registry).forEach(([key, entry]) => {
+    if (!groups[entry.type]) return;
+    const name = getDisplayName(key);
+    // count only non-wrapper inline mentions
+    const cnt = entry.mentions.length;
+    groups[entry.type].push({ key, name, cnt, entry });
+  });
+  // Sort each group by count desc, then name
+  Object.values(groups).forEach(arr => arr.sort((a, b) => b.cnt - a.cnt || a.name.localeCompare(b.name)));
+  return groups;
+}
+
+/* ── Filters ── */
+function buildElFilters() {
+  const row = document.getElementById('elFilterRow');
+  const groups = getElEntities();
+  const btns = [{type:'ALL', label:'전체'}].concat(
+    ENTITY_TYPES
+      .filter(t => groups[t] && groups[t].length > 0)
+      .map(t => ({ type:t, label:`${ENTITY_META[t].hanja} ${ENTITY_META[t].ko}` }))
+  );
+  row.innerHTML = btns.map(b =>
+    `<button class="el-filter-btn${b.type === elFilterType?' active':''}" onclick="setElFilter('${b.type}')">${b.label}</button>`
+  ).join('');
+}
+
+function setElFilter(type) {
+  elFilterType = type;
+  updateElFilters();
+  buildElGrid(document.getElementById('elSearch').value);
+}
+
+function updateElFilters() {
+  document.querySelectorAll('.el-filter-btn').forEach(btn => {
+    // re-generate filters instead
+  });
+  buildElFilters();
+}
+
+function filterEntities(q) {
+  buildElGrid(q.trim().toLowerCase());
+}
+
+/* ── Entity grid ── */
+function buildElGrid(q = '') {
+  const center = document.getElementById('elCenter');
+  center.innerHTML = '';
+  const groups = getElEntities();
+  const types = elFilterType === 'ALL' ? ENTITY_TYPES : [elFilterType];
+
+  let anyVisible = false;
+  types.forEach(type => {
+    let items = groups[type] || [];
+    if (q) items = items.filter(it => it.name.includes(q) || it.key.includes(q));
+    if (!items.length) return;
+    anyVisible = true;
+
+    const meta = ENTITY_META[type];
+    const sec  = document.createElement('div');
+    sec.className = 'el-cat-section';
+    sec.innerHTML = `
+      <div class="el-cat-header">
+        <span class="el-cat-name">${meta.hanja} ${meta.ko}</span>
+        <span class="el-cat-count">${items.length}</span>
+      </div>
+      <div class="el-grid" id="el-grid-${type}"></div>`;
+    center.appendChild(sec);
+
+    const grid = sec.querySelector(`#el-grid-${type}`);
+    items.forEach(({ key, name, cnt }) => {
+      const card = document.createElement('button');
+      card.className = `el-card${selectedElKey === key?' active':''}`;
+      card.innerHTML = `<span class="el-card-name">${escH(name)}</span><span class="el-card-cnt">${cnt}</span>`;
+      card.addEventListener('click', () => selectElEntity(key));
+      grid.appendChild(card);
+    });
+  });
+
+  if (!anyVisible) {
+    center.innerHTML = `<div style="padding:32px 36px;font-size:13px;color:var(--text-f)">검색 결과가 없습니다.</div>`;
+  }
+}
+
+/* ── Select entity in Element tab ── */
+function selectElEntity(key) {
+  selectedElKey = key;
+
+  // Rebuild grid to show active state
+  buildElGrid(document.getElementById('elSearch').value);
+
+  const entry = registry[key];
+  if (!entry) return;
+  const meta  = ENTITY_META[entry.type] || ENTITY_META.Monk;
+  const attrs = entry.attrs;
+  const name  = getDisplayName(key);
+  const hanja = attrs.hanjaname && attrs.hanjaname !== name ? attrs.hanjaname : '';
+
+  document.getElementById('elRightName').textContent = name;
+  const badge = document.getElementById('elRightBadge');
+  badge.textContent = `${meta.hanja} ${meta.ko}`;
+  badge.className = `el-right-badge badge-${meta.cls}`;
+  badge.style.display = 'inline-flex';
+  document.getElementById('elRightSub').textContent = hanja || '';
+  document.getElementById('elRightAppears').textContent =
+    entry.mentions.length ? `${entry.mentions.length}개 단락에 등장` : '';
+
+  const panel = document.getElementById('elEntityPanel');
+
+  // Build attr section
+  let attrRows = '';
+  meta.attrs.forEach(([ak, al]) => {
+    const v = attrs[ak]; if (!v || !v.trim()) return;
+    const d = ak === 'othername' ? v.split(';').join(' · ') : v;
+    attrRows += `<tr><td class="attr-key">${al}</td><td class="attr-val">${escH(d)}</td></tr>`;
+  });
+
+  // Build mention list (deduplicated by contentId+snippet)
+  const seen = new Set();
+  const uniqueMentions = entry.mentions.filter(m => {
+    const k = m.contentId + '||' + m.snippet.replace(/<[^>]+>/g,'').slice(0,40);
+    if (seen.has(k)) return false; seen.add(k); return true;
+  });
+
+  const paraItems = uniqueMentions.map((m, i) =>
+    `<div class="para-item" id="para-${key.replace(/[^a-zA-Z0-9]/g,'_')}-${i}"
+       onclick="jumpToText('${escH(key)}', '${escH(m.contentId)}')">
+      <div class="para-ref-row">
+        <span class="para-ref-icon">📄</span>
+        <span class="para-ref-label">${escH(m.cName)}</span>
+        <span class="para-ref-sec">— ${escH(m.secName)}</span>
+      </div>
+      <p class="para-text">…${m.snippet}…</p>
+    </div>`
+  ).join('');
+
+  panel.innerHTML = `
+    ${attrRows ? `<div class="el-attr-block">
+      <hr class="ep-divider" style="margin:0 0 10px">
+      <div class="attr-section-lbl">속성 정보</div>
+      <table class="attr-table">${attrRows}</table>
+    </div>` : ''}
+    <div class="para-list">
+      ${paraItems || '<div class="el-empty">원문 참조가 없습니다.</div>'}
+    </div>`;
+}
+
+/* Jump from Element tab paragraph → Text tab */
+function jumpToText(key, contentId) {
+  switchTab('text');
+  selectContent(contentId);
+  setTimeout(() => {
+    const entry = registry[key];
+    const type = entry ? entry.type : 'Monk';
+    selectEntity(key, type, getDisplayName(key));
+    // Scroll to first highlighted badge
+    const firstBadge = document.querySelector(`.entity-badge[data-key="${CSS.escape(key)}"]`);
+    if (firstBadge) firstBadge.scrollIntoView({ behavior:'smooth', block:'center' });
+  }, 80);
+}
+
+/* ── GO ── */
+document.addEventListener('DOMContentLoaded', init);
+</script>
+</body>
+</html>
