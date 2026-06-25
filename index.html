@@ -159,7 +159,10 @@ header{
   padding:12px 4px;margin:12px 0;
 }
 .date-inline{color:var(--text-f);font-size:.88em}
-.annotation-sup{font-size:.75em;color:var(--text-f)}
+.annotation-inline{
+  color:var(--text-m);font-size:.88em;font-style:normal;
+  letter-spacing:.01em;
+}
 .sub-heading{font-size:12px;font-weight:600;color:var(--text-f);margin:8px 0 4px;
   font-family:'Inter',sans-serif}
 
@@ -503,19 +506,19 @@ const STRUCTURAL_PARENTS = new Set(['Chapter','Section','Content','Part','Volume
 
 const ENTITY_META = {
   Monk:    { ko:'승려', hanja:'僧', cls:'monk',
-    attrs:[['korname','한국명'],['hanjaname','한자명'],['beopmyeong','법명(法名)'],['beopho','법호(法號)'],['othername','이칭(異稱)'],['birth','생(生)'],['death','몰(沒)']] },
+    attrs:[['korname','한글명'],['hanjaname','한자명'],['beopmyeong','법명(法名)'],['beopho','법호(法號)'],['sokmyeong','속명(俗名)'],['othername','이칭(異稱)'],['nation','국적(國籍)'],['birth','생(生)'],['death','몰(沒)']] },
   Person:  { ko:'인물', hanja:'人', cls:'person',
-    attrs:[['korname','한국명'],['hanjaname','한자명'],['ja','자(字)'],['ho','호(號)'],['othername','이칭(異稱)'],['birth','생(生)'],['death','몰(沒)']] },
+    attrs:[['korname','한글명'],['hanjaname','한자명'],['ja','자(字)'],['ho','호(號)'],['othername','이칭(異稱)'],['nation','국적(國籍)'],['birth','생(生)'],['death','몰(沒)']] },
   Temple:  { ko:'사찰', hanja:'寺', cls:'temple',
-    attrs:[['korname','한국명'],['hanjaname','한자명'],['previousname','구명(舊名)'],['type','유형'],['region','지역']] },
+    attrs:[['korname','한글명'],['hanjaname','한자명'],['previousname','구명(舊名)'],['type','유형'],['region','지역']] },
   Place:   { ko:'장소', hanja:'地', cls:'place',
-    attrs:[['korname','한국명'],['hanjaname','한자명'],['previousname','구명(舊名)'],['province','도(道)']] },
+    attrs:[['korname','한글명'],['hanjaname','한자명'],['previousname','구명(舊名)'],['province','도(道)']] },
   Book:    { ko:'문헌', hanja:'書', cls:'book',
-    attrs:[['korname','한국명'],['hanjaname','한자명'],['type','유형'],['writer','저자(著者)'],['editer','편자(編者)']] },
+    attrs:[['korname','한글명'],['hanjaname','한자명'],['type','유형'],['writer','저자(著者)'],['editer','편자(編者)']] },
   Work:    { ko:'작품', hanja:'作', cls:'work',
-    attrs:[['korname','한국명'],['hanjaname','한자명'],['type','유형'],...[['writer','저자']]] },
+    attrs:[['korname','한글명'],['hanjaname','한자명'],['type','유형'],...[['writer','저자']]] },
   Object:  { ko:'유물', hanja:'物', cls:'object',
-    attrs:[['korname','한국명'],['hanjaname','한자명'],['type','유형']] },
+    attrs:[['korname','한글명'],['hanjaname','한자명'],['type','유형']] },
   Concept: { ko:'개념', hanja:'念', cls:'concept', attrs:[] },
 };
 
@@ -811,11 +814,15 @@ function serializeXML(node, parentName) {
     if (!txt) return '';
     const meta = ENTITY_META[tag] || ENTITY_META.Monk;
     if (hasEntityChildren(node)) {
+      // Block-level wrapper: recurse children transparently
       let inner = ''; for (const c of node.childNodes) inner += serializeXML(c, tag);
       return id ? `<span class="entity-wrapper" data-key="${escH(id)}" data-type="${tag}">${inner}</span>` : inner;
     } else {
+      // Inline mention: recurse children so Annotation inside badge is rendered
       const ka = id ? `data-key="${escH(id)}"` : '';
-      return `<span class="entity-badge badge-${meta.cls}" ${ka} data-type="${tag}">${escH(txt)}</span>`;
+      let innerContent = '';
+      for (const c of node.childNodes) innerContent += serializeXML(c, tag);
+      return `<span class="entity-badge badge-${meta.cls}" ${ka} data-type="${tag}">${innerContent}</span>`;
     }
   }
 
@@ -840,7 +847,7 @@ function serializeXML(node, parentName) {
       const w = node.getAttribute('when')||'';
       return `<span class="date-inline"${w?` title="${escH(w)}"`:''  }>${inner}</span>`;
     }
-    case 'Annotation': return `<sup class="annotation-sup">[${inner}]</sup>`;
+    case 'Annotation': return `<span class="annotation-inline">(${inner})</span>`;
     default: return inner;
   }
 }
