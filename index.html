@@ -159,9 +159,9 @@ header{
   padding:12px 4px;margin:12px 0;
 }
 .date-inline{color:var(--text-f);font-size:.88em}
+.annotation-sup{font-size:.75em;color:var(--text-f)}
 .annotation-inline{
-  color:var(--text-m);font-size:.88em;font-style:normal;
-  letter-spacing:.01em;
+  color:var(--text-m);font-size:.88em;font-style:normal;letter-spacing:.01em;
 }
 .sub-heading{font-size:12px;font-weight:600;color:var(--text-f);margin:8px 0 4px;
   font-family:'Inter',sans-serif}
@@ -814,11 +814,10 @@ function serializeXML(node, parentName) {
     if (!txt) return '';
     const meta = ENTITY_META[tag] || ENTITY_META.Monk;
     if (hasEntityChildren(node)) {
-      // Block-level wrapper: recurse children transparently
       let inner = ''; for (const c of node.childNodes) inner += serializeXML(c, tag);
       return id ? `<span class="entity-wrapper" data-key="${escH(id)}" data-type="${tag}">${inner}</span>` : inner;
     } else {
-      // Inline mention: recurse children so Annotation inside badge is rendered
+      // Recurse children so Annotation inside an entity badge is preserved
       const ka = id ? `data-key="${escH(id)}"` : '';
       let innerContent = '';
       for (const c of node.childNodes) innerContent += serializeXML(c, tag);
@@ -832,16 +831,23 @@ function serializeXML(node, parentName) {
     case 'p': return `<p class="text-para">${inner}</p>`;
     case 'h':
       if (STRUCTURAL_PARENTS.has(parentName)) return '';
+      if (parentName === 'Reference') return `<div class="ref-hdr">${inner}</div>`;
       return `<div class="sub-heading">${inner}</div>`;
     case 'Quote': {
       const src = (node.getAttribute('source_work')||node.getAttribute('source_book')||'').replace(/_/g,' ');
       return `<div class="quote-block">${src?`<div class="quote-src">출전: ${escH(src)}</div>`:''  }${inner}</div>`;
     }
-    case 'Reference': return `<div class="reference-block"><div class="ref-hdr">參考</div>${inner}</div>`;
+    case 'Reference': return `<div class="reference-block">${inner}</div>`;
     case 'Title':           return `<div class="quote-title">${inner}</div>`;
-    case 'Writer':          return `<div class="quote-contrib"><span class="contrib-lbl">撰</span>${inner}</div>`;
-    case 'Calligrapher':    return `<div class="quote-contrib"><span class="contrib-lbl">書</span>${inner}</div>`;
-    case 'TitleCalligrapher': return `<div class="quote-contrib"><span class="contrib-lbl">篆</span>${inner}</div>`;
+    case 'Writer':
+      if (parentName === 'Annotation') return `<span class="contrib-lbl">撰</span> ${inner}`;
+      return `<div class="quote-contrib"><span class="contrib-lbl">撰</span>${inner}</div>`;
+    case 'Calligrapher':
+      if (parentName === 'Annotation') return `<span class="contrib-lbl">書</span> ${inner}`;
+      return `<div class="quote-contrib"><span class="contrib-lbl">書</span>${inner}</div>`;
+    case 'TitleCalligrapher':
+      if (parentName === 'Annotation') return `<span class="contrib-lbl">篆</span> ${inner}`;
+      return `<div class="quote-contrib"><span class="contrib-lbl">篆</span>${inner}</div>`;
     case 'Poem':            return `<div class="poem-block">${inner}</div>`;
     case 'date': {
       const w = node.getAttribute('when')||'';
