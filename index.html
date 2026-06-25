@@ -139,6 +139,11 @@ header{
   font-size:10px;color:var(--text-f);font-family:'Inter',sans-serif;
   letter-spacing:.06em;margin-bottom:12px;text-transform:uppercase;
 }
+.quote-src-link{
+  color:var(--text-f);text-underline-offset:2px;
+  text-decoration:underline dotted;cursor:pointer;transition:color .12s;
+}
+.quote-src-link:hover{color:var(--text)}
 .quote-title{font-size:15px;font-weight:700;text-align:center;margin-bottom:12px;color:var(--text)}
 .quote-contrib{font-size:12px;color:var(--text-m);margin-bottom:4px;
   display:flex;align-items:flex-start;gap:8px}
@@ -834,8 +839,26 @@ function serializeXML(node, parentName) {
       if (parentName === 'Reference') return `<div class="ref-hdr">${inner}</div>`;
       return `<div class="sub-heading">${inner}</div>`;
     case 'Quote': {
-      const src = (node.getAttribute('source_work')||node.getAttribute('source_book')||'').replace(/_/g,' ');
-      return `<div class="quote-block">${src?`<div class="quote-src">출전: ${escH(src)}</div>`:''  }${inner}</div>`;
+      const srcWork = node.getAttribute('source_work') || node.getAttribute('source_book') || '';
+      const srcUrl  = node.getAttribute('source_url') || '';
+      let srcHtml = '';
+      if (srcWork) {
+        const works = srcWork.split(';');
+        const urls  = srcUrl.split(';');
+        const parts = works
+          .map((w, i) => {
+            const label = w.replace(/_/g, ' ').trim();
+            if (!label) return '';
+            const url = (urls[i] || '').trim();
+            return url
+              ? `<a class="quote-src-link" href="${escH(url)}" target="_blank" rel="noopener">${escH(label)}</a>`
+              : escH(label);
+          })
+          .filter(Boolean)
+          .join(' · ');
+        srcHtml = `<div class="quote-src">출전: ${parts}</div>`;
+      }
+      return `<div class="quote-block">${srcHtml}${inner}</div>`;
     }
     case 'Reference': return `<div class="reference-block">${inner}</div>`;
     case 'Title':           return `<div class="quote-title">${inner}</div>`;

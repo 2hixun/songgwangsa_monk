@@ -10,7 +10,7 @@
 			<h>第一節普照國師</h>
 				<Content id="GR-01-01">
 					<h>一.碑文</h>
-					<Quote source_work="송광사_보조국사비명_고사본;동문선117-조계산_수선사_불일보소국사_비명;중립비명">
+					<Quote source_work="송광사_보조국사비명_고사본;동문선117-조계산_수선사_불일보소국사_비명;중립비명" source_url=";http://db.itkc.or.kr/inLink?DCI=ITKC_BT_1365A_1200_020_0040_2002_009_XML;">
 						<Title>昇平府曹溪山修禪社佛日普照國師碑銘幷序</Title>
 						<Writer>知公州事副使兼勸農使管句學士將仕郞兼禮部尙書賜紫金魚袋臣<Person id="김군수" korname="김군수" hanjaname="金君綏" ja="" ho="雪堂" othername="" nation="고려" birth="" death="">金君綏</Person>奉宣撰</Writer>
 						<Calligrapher>文林郞神虎衛長臣<Person id="류신" korname="류신" hanjaname="柳伸" ja="" ho="" othername="" nation="고려" birth="" death="1104">柳伸</Person>奉宣書<Annotation>舊碑書者</Annotation>
