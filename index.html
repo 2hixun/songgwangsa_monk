@@ -539,13 +539,24 @@ async function init() {
     <div style="font-size:13px;letter-spacing:.06em">데이터 로딩 중…</div></div>`;
   document.getElementById('centerBody').innerHTML = loading;
   try {
-    const res = await fetch('data.xml');
-    if (!res.ok) throw new Error('파일 로드 실패 (' + res.status + ')');
+    const xmlUrl = new URL('data.xml', location.href).href;
+    const res = await fetch(xmlUrl, { cache: 'no-cache' });
+    if (!res.ok) throw new Error(
+      `data.xml 파일을 찾을 수 없습니다 (HTTP ${res.status})\n\n` +
+      `요청 URL: ${xmlUrl}\n` +
+      `index.html 과 data.xml 이 GitHub 저장소 같은 폴더에 있는지 확인하세요.`
+    );
     const xmlText = await res.text();
     const parser  = new DOMParser();
-    xmlDoc = parser.parseFromString(xmlText, 'application/xml');
+    xmlDoc = parser.parseFromString(xmlText, 'text/xml');
     const parseErr = xmlDoc.querySelector('parsererror');
-    if (parseErr) throw new Error('XML 구문 오류: ' + parseErr.textContent.slice(0,80));
+    if (parseErr) {
+      const errMsg  = parseErr.textContent.trim().slice(0, 300);
+      const preview = xmlText.slice(0, 200).replace(/</g,'&lt;');
+      throw new Error(
+        `XML 파싱 오류\n\n파서 메시지:\n${errMsg}\n\n수신된 내용 첫 200자:\n${preview}`
+      );
+    }
     document.getElementById('centerBody').innerHTML =
       '<div class="content-wrap"><h2 id="contentTitle"></h2><div id="contentBody" onclick="handleBadgeClick(event)"></div></div>';
     buildRegistry();
